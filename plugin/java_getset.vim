@@ -257,6 +257,11 @@ if !exists("b:javagetset_enable_K_and_R")
   let b:javagetset_enable_K_and_R = 0
 endif
 
+" Does add "this" keyword as prefix
+if !exists("b:javagetset_add_this")
+  let b:javagetset_add_this = 0
+endif
+
 " Make sure we are in vim mode
 let s:save_cpo = &cpo
 set cpo&vim
@@ -738,7 +743,11 @@ if !exists("*s:InsertGetter")
     endif
 
     let method = substitute(method, '%type%', s:vartype, 'g')
-    let method = substitute(method, '%varname%', s:varname, 'g')
+    if b:javagetset_add_this == 0
+      let method = substitute(method, '%varname%', s:varname, 'g')
+    else
+      let method = substitute(method, '%varname%', 'this.' . s:varname, 'g')
+    endif
     let method = substitute(method, '%funcname%', 'get' . s:funcname, 'g')
     let method = substitute(method, '%modifiers%', mods, 'g')
 
@@ -764,7 +773,11 @@ if !exists("*s:InsertSetter")
     endif
 
     let method = substitute(method, '%type%', s:vartype, 'g')
-    let method = substitute(method, '%varname%', s:varname, 'g')
+    if b:javagetset_add_this == 0
+      let method = substitute(method, '%varname%', s:varname, 'g')
+    else
+      let method = substitute(method, '%varname%', 'this.' . s:varname, 'g')
+    endif
     let method = substitute(method, '%funcname%', 'set' . s:funcname, 'g')
     let method = substitute(method, '%modifiers%', mods, 'g')
 
